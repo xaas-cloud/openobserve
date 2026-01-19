@@ -20,8 +20,9 @@ import {
   formatUnitValue,
   formatDate,
   findFirstValidMappedValue,
+  createDateFormatter,
+  formatDateWithFormatter,
 } from "../convertDataIntoUnitValue";
-import { toZonedTime } from "date-fns-tz";
 
 /**
  * Converter for table charts
@@ -389,19 +390,27 @@ export class TableConverter implements PromQLChartConverter {
     // In "single" (Timestamp) mode, create rows with timestamp + value for ALL series
     if (tableMode === "single") {
       const timezone = store.state.timezone;
+      const dateFormatter = createDateFormatter(timezone);
 
+      const singleModeLabel = `table-single-mode-conversion-${panelSchema.id}`;
+      console.time(singleModeLabel);
       processedData.forEach((queryData, qIndex) => {
         queryData.series.forEach((seriesData, sIndex) => {
           // Create a row for each data point
           seriesData.values.forEach(([timestamp, value]) => {
+            const dateStr = formatDateWithFormatter(
+              new Date(timestamp * 1000),
+              dateFormatter,
+            ).replace("T", " ");
             rows.push({
-              timestamp: formatDate(toZonedTime(timestamp * 1000, timezone)),
+              timestamp: dateStr,
               value: parseFloat(value),
               __legend__: seriesData.name, // Store legend for filtering
             });
           });
         });
       });
+      console.timeEnd(singleModeLabel);
 
       // Apply row limit if specified
       if (config.row_limit) {
@@ -414,13 +423,20 @@ export class TableConverter implements PromQLChartConverter {
     // In "expanded_timeseries" mode, create rows with timestamp + all metric labels + value
     if (tableMode === "expanded_timeseries") {
       const timezone = store.state.timezone;
+      const dateFormatter = createDateFormatter(timezone);
 
+      const expandedModeLabel = `table-expanded-timeseries-conversion-${panelSchema.id}`;
+      console.time(expandedModeLabel);
       processedData.forEach((queryData, qIndex) => {
         queryData.series.forEach((seriesData, sIndex) => {
           // Create a row for each data point with all metadata
           seriesData.values.forEach(([timestamp, value]) => {
+            const dateStr = formatDateWithFormatter(
+              new Date(timestamp * 1000),
+              dateFormatter,
+            ).replace("T", " ");
             const row: any = {
-              timestamp: formatDate(toZonedTime(timestamp * 1000, timezone)),
+              timestamp: dateStr,
               ...seriesData.metric, // Spread all metric labels (job, instance, etc.)
               value: parseFloat(value),
               __legend__: seriesData.name, // Store legend for filtering
@@ -429,6 +445,7 @@ export class TableConverter implements PromQLChartConverter {
           });
         });
       });
+      console.timeEnd(expandedModeLabel);
 
       // Apply row limit if specified
       if (config.row_limit) {
