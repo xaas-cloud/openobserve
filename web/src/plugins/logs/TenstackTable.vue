@@ -352,6 +352,7 @@ name="warning" class="q-mr-xs" />
                     "
                     :column="cell.column"
                     :row="cell.row.original as any"
+                    :selectedStreamFields="selectedStreamFields"
                     @copy="copyLogToClipboard"
                     @add-search-term="addSearchTerm"
                     @add-field-to-table="addFieldToTable"
@@ -376,7 +377,7 @@ name="warning" class="q-mr-xs" />
                     cell.column.columnDef.id ===
                     store.state.zoConfig.timestamp_column
                   "
-                  class="tw:absolute tw:right-[16px] tw:top-1/2 tw:transform tw:invisible tw:-translate-y-1/2 ai-btn"
+                  class="tw:absolute tw:top-1/2 tw:transform tw:invisible tw:-translate-y-1/2 ai-btn"
                   @send-to-ai-chat="
                     sendToAiChat(JSON.stringify(cell.row.original), true)
                   "
@@ -401,8 +402,8 @@ import {
   ComputedRef,
   defineExpose,
 } from "vue";
+import type { PropType } from "vue";
 import { useVirtualizer } from "@tanstack/vue-virtual";
-import HighLight from "@/components/HighLight.vue";
 import {
   FlexRender,
   type ColumnDef,
@@ -419,9 +420,13 @@ import CellActions from "@/plugins/logs/data-table/CellActions.vue";
 import { debounce } from "quasar";
 import O2AIContextAddBtn from "@/components/common/O2AIContextAddBtn.vue";
 import { extractStatusFromLog } from "@/utils/logs/statusParser";
-import LogsHighLighting from "@/components/logs/LogsHighLighting.vue";
 import { useTextHighlighter } from "@/composables/useTextHighlighter";
 import { useLogsHighlighter } from "@/composables/useLogsHighlighter";
+
+interface StreamField {
+  name: string;
+  isSchemaField: boolean;
+}
 
 const props = defineProps({
   rows: {
@@ -475,7 +480,11 @@ const props = defineProps({
     required: false,
   },
   selectedStreamFtsKeys: {
-    type: Array as PropType<string[]>,
+    type: Array as PropType<StreamField[]>,
+    default: () => [],
+  },
+  selectedStreamFields: {
+    type: Array as PropType<StreamField[]>,
     default: () => [],
   },
 });
@@ -896,7 +905,7 @@ const expandRow = async (index: number) => {
       }
 
       // Trigger a full recalculation
-      rowVirtualizer.value.measure();
+      // rowVirtualizer.value.measure();
     }
   }
 };

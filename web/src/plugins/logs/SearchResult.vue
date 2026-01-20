@@ -182,13 +182,13 @@ color="warning" size="sm"> </q-icon>
             !searchObj.loading
           "
         >
-          <h3 class="text-center">
+          <h6 class="text-center">
             <span class="histogram-empty__message">
               <q-icon name="warning"
 color="warning" size="xs"></q-icon> No data
               found for histogram.</span
             >
-          </h3>
+          </h6>
         </div>
 
         <div
@@ -197,12 +197,12 @@ color="warning" size="xs"></q-icon> No data
             searchObj.meta.showHistogram && Object.keys(plotChart)?.length === 0
           "
         >
-          <h3 class="text-center">
+          <h5 class="text-center">
             <span class="histogram-empty__message"
 style="color: transparent"
               >.</span
             >
-          </h3>
+          </h5>
         </div>
 
         <div class="q-pb-sm histogram-loader" v-if="histogramLoader">
@@ -285,6 +285,7 @@ color="warning" size="xs"></q-icon> Error while
               ? 'table-container--without-histogram'
               : 'table-container--with-histogram',
           ]"
+          :selectedStreamFields="searchObj.data.stream.selectedStreamFields"
           @update:columnSizes="handleColumnSizesUpdate"
           @update:columnOrder="handleColumnOrderUpdate"
           @copy="copyLogToClipboard"
@@ -1325,6 +1326,10 @@ export default defineComponent({
 
     const closeTable = () => {
       searchObj.meta.showDetailTab = false;
+      // Clear correlation data when closing sidebar so it doesn't persist to next row
+      correlationDashboardProps.value = null;
+      correlationLoading.value = false;
+      correlationError.value = null;
     };
 
     // Volume Analysis functions
@@ -1364,6 +1369,21 @@ export default defineComponent({
         // });
       },
       { deep: true },
+    );
+
+    // Watch for sidebar close to clear correlation data
+    // This ensures fresh correlation data when reopening with a different row
+    watch(
+      () => searchObj.meta.showDetailTab,
+      (isOpen, wasOpen) => {
+        // When sidebar closes, clear correlation data
+        if (wasOpen && !isOpen) {
+          console.log("[SearchResult] Sidebar closed, clearing correlation data");
+          correlationDashboardProps.value = null;
+          correlationLoading.value = false;
+          correlationError.value = null;
+        }
+      }
     );
 
     // Watch for datetime changes from outside (datetime picker, search button, etc.)

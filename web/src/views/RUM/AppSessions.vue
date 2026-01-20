@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <div class="tw:pb-[0.625rem] tw:px-[0.625rem]">
         <div class="card-container">
           <div class="text-right tw:p-[0.375rem] flex align-center justify-between">
-            <syntax-guide class="q-mr-sm" />
+            <syntax-guide />
             <div class="flex align-center justify-end metrics-date-time">
               <date-time
                 auto-apply
@@ -40,12 +40,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 data-test="metrics-explorer-run-query-button"
                 data-cy="metrics-explorer-run-query-button"
                 dense
-                title="Run query"
+                :title="t('metrics.runQuery')"
                 class="q-pa-none tw:mr-none! o2-run-query-button o2-color-primary tw:h-[33px] element-box-shadow"
                 @click="runQuery"
                 no-caps
               >
-                Run query
+                {{ t("metrics.runQuery") }}
               </q-btn>
             </div>
           </div>
@@ -78,14 +78,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             />
           </div>
         </template>
-        <template #separator>
-          <q-avatar
-            color="primary"
-            text-color="white"
-            icon="drag_indicator"
-            class="tw:top-[2rem]! tw:w-[0.75rem] tw:h-[2rem]! tw:text-[2rem]! tw:rounded-[0.325rem]!"
-          />
-        </template>
         <template #after>
           <div class="tw:pr-[0.625rem] tw:h-full">
             <div class="card-container tw:h-full">
@@ -100,7 +92,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                       class="tw:mx-auto tw:block"
                     />
                     <div class="text-center full-width">
-                      Hold on tight, we're fetching your sessions.
+                      {{ t("rum.loadingSessions") }}
                     </div>
                   </div>
                 </div>
@@ -112,7 +104,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   class="app-table-container tw:h-full"
                   :bordered="false"
                   @event-emitted="handleTableEvents"
+                  data-test="rum-sessions-table"
                 >
+                  <template v-slot:frustration_count_column="slotProps">
+                    <FrustrationBadge
+                      :count="slotProps.column.row.frustration_count || 0"
+                    />
+                  </template>
                   <template v-slot:session_location_column="slotProps">
                     <SessionLocationColumn :column="slotProps.column.row" />
                   </template>
@@ -129,14 +127,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <div class="q-pa-lg enable-rum tw:max-w-[64rem]">
             <div class="q-pb-lg">
               <div class="text-left text-h6 text-bold q-pb-md">
-                Discover Session Replay to Understand User Interactions in
-                Detail
+                {{ t("rum.discoverSessionTitle") }}
               </div>
               <div class="text-subtitle1">
-                Session Replay captures and replays user interactions on your
-                website or application. This allows you to visually review how
-                users navigate, where they click, what they type, and how they
-                engage with your content
+                {{ t("rum.discoverSessionMessage") }}
               </div>
               <div>
                 <div></div>
@@ -145,10 +139,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <q-btn
               class="bg-primary rounded text-white"
               no-caps
-              title="Get started with Real User Monitoring"
+              :title="t('common.getStartedRUM')"
               @click="getStarted"
             >
-              Get Started
+              {{ t("common.getStarted") }}
             </q-btn>
           </div>
         </div>
@@ -182,6 +176,7 @@ import useSession from "@/composables/useSessionReplay";
 import DateTime from "@/components/DateTime.vue";
 import SyntaxGuide from "@/plugins/traces/SyntaxGuide.vue";
 import SessionLocationColumn from "@/components/rum/sessionReplay/SessionLocationColumn.vue";
+import FrustrationBadge from "@/components/rum/FrustrationBadge.vue";
 import { getConsumableRelativeTime } from "@/utils/date";
 import useStreams from "@/composables/useStreams";
 
@@ -190,6 +185,7 @@ interface Session {
   type: string;
   time_spent: number;
   error_count: string;
+  frustration_count?: number;
   initial_view_name: string;
   id: string;
 }
@@ -300,6 +296,16 @@ const columns = ref([
     label: t("rum.errorCount"),
     align: "left",
     sortable: true,
+  },
+  {
+    name: "frustration_count",
+    field: (row: any) => row["frustration_count"] || 0,
+    prop: (row: any) => row["frustration_count"] || 0,
+    label: t("rum.frustrationCount"),
+    align: "left",
+    sortable: true,
+    slot: true,
+    slotName: "frustration_count_column",
   },
   {
     name: "location",
@@ -496,7 +502,21 @@ const getSessionLogs = (req: any) => {
     whereClause = `where session_id IN (${sessionsKeys.map((item) => `'${item}'`).join(", ")})`;
   }
 
-  req.query.sql = `select min(${store.state.zoConfig.timestamp_column}) as zo_sql_timestamp, min(type) as type, SUM(CASE WHEN type='error' THEN 1 ELSE 0 END) AS error_count, SUM(CASE WHEN type!='null' THEN 1 ELSE 0 END) AS events, ${userFields} ${geoFields} session_id from "_rumdata" ${whereClause} group by session_id order by zo_sql_timestamp DESC`;
+  req.query.sql = req.query.sql = `
+    select 
+      min(${store.state.zoConfig.timestamp_column}) as zo_sql_timestamp,
+      min(type) as type,
+      -- Count total errors for this session
+      SUM(CASE WHEN type='error' THEN 1 ELSE 0 END) AS error_count,
+      -- Count actions with frustration signals (action_frustration_type is NOT NULL)
+      SUM(CASE WHEN type='action' AND action_frustration_type IS NOT NULL THEN 1 ELSE 0 END) AS frustration_count,
+      -- Count all non-null event types
+      SUM(CASE WHEN type!='null' THEN 1 ELSE 0 END) AS events,
+      ${userFields} ${geoFields} 
+      session_id 
+    from "_rumdata" ${whereClause} 
+    group by session_id 
+    order by zo_sql_timestamp DESC`;
 
   isLoading.value.push(true);
   searchService
@@ -514,6 +534,8 @@ const getSessionLogs = (req: any) => {
         if (sessionState.data.sessions[hit.session_id]) {
           sessionState.data.sessions[hit.session_id].error_count =
             hit.error_count;
+          sessionState.data.sessions[hit.session_id].frustration_count =
+            hit.frustration_count || 0;
           sessionState.data.sessions[hit.session_id].user_email =
             hit.user_email;
           sessionState.data.sessions[hit.session_id].country = hit.country;

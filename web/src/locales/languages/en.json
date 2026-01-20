@@ -105,7 +105,10 @@
     "showMore": "Show More",
     "contactUs": "Contact Us",
     "addFolder": "Add Folder",
-    "status": "Status"
+    "status": "Status",
+    "chunkLoadErrorMsg": "A new version of the application is available. Please refresh the page to continue.",
+    "id": "ID",
+    "getStarted": "Get Started"
   },
   "search": {
     "resetFields": "Reset selected table fields",
@@ -323,6 +326,7 @@
     "help": "Help",
     "dashboard": "Dashboards",
     "alerts": "Alerts",
+    "incidents": "Incidents",
     "openapi": "OpenAPI",
     "docs": "Docs",
     "billings": "Billing",
@@ -358,6 +362,7 @@
     "sessionType": "Session Type",
     "timeSpent": "Time Spent",
     "errorCount": "Error Count",
+    "frustrationCount": "Frustrations",
     "initialViewName": "Initial View Name",
     "timestamp": "Timestamp",
     "type": "Type",
@@ -369,7 +374,22 @@
     "sizekb": "Size (kb)",
     "viewURL": "View URL",
     "events": "Events",
-    "location": "Location"
+    "location": "Location",
+    "loadingMsg": "Hold on tight, we're loading RUM data.",
+    "breadcrumbs": "Breadcrumbs",
+    "tags": "Tags",
+    "searchEvents": "Search Events",
+    "loadingSessions": "Hold on tight, we're fetching sessions.",
+    "errorStack": "Error Stack",
+    "sessionReplay": "Session Replay",
+    "viewSessionReplay": "View Session Replay",
+    "playSessionReplay": "Play Session Replay",
+    "discoverSessionTitle": "Discover Session Replay to Understand User Interactions in Detail",
+    "discoverSessionMessage": "Session Replay captures and replays user interactions on your website or application. This allows you to visually review how users navigate, where they click, what they type, and how they engage with your content",
+    "getStartedRUM": "Get started with Real User Monitoring",
+    "loadingErrorDetails": "Hold on tight, we're fetching error details.",
+    "eventID": "Event ID",
+    "loadingApplicationErrors": "Hold on tight, we're fetching application errors."
   },
   "about": {
     "name": "OpenObserve",
@@ -395,11 +415,56 @@
     "ingestion_type": "Ingestion Type",
     "ingestion_limit": "Ingestion Limit",
     "today_usage": "Today's Usage",
-    "feature_comparision_lbl": "Feature Comparison",
+    "feature_comparison_lbl": "Feature Comparison",
     "feature_comparision_ent_msg": "You're using OpenObserve Enterprise Edition with access to all advanced features listed below.",
     "feature_comparision_plan_detail": "Your plan: Enterprise Edition is free for up to 200 GB/day (~6 TB/month) of data ingestion.",
     "feature_comparision_os_msg": "You're currently using OpenObserve Open Source Edition. Upgrade to Enterprise Edition to unlock advanced features listed in the comparison table below.",
     "feature_comparision_good_news": "Good news: OpenObserve Enterprise Edition is completely free for up to 200 GB/day (~6 TB/month) of data ingestion.",
+    "feature_comparision_subtitle": "Compare features across Open Source, Enterprise, and Cloud offerings",
+    "feature_column_name": "Feature",
+    "edition_opensource": "Open Source (Self hosted)",
+    "edition_enterprise": "Enterprise (Self hosted)",
+    "edition_cloud": "Cloud",
+    "feature_logs": "Logs",
+    "feature_metrics": "Metrics",
+    "feature_traces": "Traces",
+    "feature_rum": "RUM",
+    "feature_alerts": "Alerts",
+    "feature_dashboards": "Dashboards",
+    "feature_reports": "Reports",
+    "feature_vrl_functions": "VRL functions",
+    "feature_pipelines": "Pipelines",
+    "feature_high_availability": "High Availability",
+    "feature_multitenancy": "Multitenancy (Organizations)",
+    "feature_dynamic_schema": "Dynamic schema and schema evolution",
+    "feature_multilingual_gui": "Advanced multilingual GUI",
+    "feature_sso": "Single Sign On",
+    "feature_rbac": "Role Based Access Control (RBAC)",
+    "feature_federated_search": "Federated search / Super cluster",
+    "feature_query_management": "Query management",
+    "feature_workload_management": "Workload management (QoS)",
+    "feature_audit_trail": "Audit trail",
+    "feature_action_scripts": "Action Scripts",
+    "feature_sensitive_data_redaction": "Sensitive data redaction",
+    "feature_influence_roadmap": "Ability to influence roadmap",
+    "feature_license": "License",
+    "feature_support": "Support",
+    "feature_cost": "Cost",
+    "feature_pipelines_external": "Pipelines - External destinations",
+    "feature_extreme_performance": "Extreme performance (100x improvement for many queries)",
+    "feature_query_optimizer": "Query optimizer",
+    "value_sso_requires_ha": "✅ Requires HA mode",
+    "value_rbac_requires_ha": "✅ Requires HA mode",
+    "value_roadmap_enterprise_plan": "✅ on enterprise plan",
+    "value_license_agpl": "AGPL",
+    "value_license_enterprise": "Enterprise",
+    "value_license_cloud": "Cloud",
+    "value_support_community": "Community",
+    "value_support_enterprise": "Enterprise",
+    "value_support_cloud": "Cloud",
+    "value_cost_free": "Free",
+    "value_cost_enterprise": "If self hosted, free for up to 200 GB/Day data ingested. Paid thereafter",
+    "value_cost_cloud": "14 day free trial. Paid thereafter",
     "commit_lbl": "Commit",
     "build_lbl": "Built",
     "no_license_installed_lbl": "No License Installed",
@@ -410,7 +475,190 @@
     "community_lbl": "Community",
     "loading_license_info": "Loading license information...",
     "installation_id_lbl": "Installation ID",
-    "expired_lbl": "Expired"
+    "expired_lbl": "Expired",
+    "header_button": {
+      "cloud_features": "OpenObserve Features",
+      "enterprise_edition": "Edition: Enterprise",
+      "get_enterprise_free": "Get OpenObserve Enterprise (Free)"
+    },
+    "enterprise_offer": {
+      "cloud": {
+        "hero_title": "Enterprise Features",
+        "offer_text": "Get all enterprise features completely free when you self-host OpenObserve",
+        "badge_text": "Free up to 200GB / day",
+        "features_title": "OpenObserve Cloud Features",
+        "features_subtitle": "All features included in your cloud subscription",
+        "primary_button_text": "Download Now"
+      },
+      "enterprise_without_license": {
+        "hero_title": "Enterprise Features",
+        "offer_text": "Request a free license to maximize your OpenObserve deployment",
+        "badge_text": "Free up to {quota}GB / day",
+        "features_title": "Available Enterprise Features",
+        "features_subtitle": "Get a free license to unlock unlimited capabilities",
+        "primary_button_text": "Get Free License",
+        "license_note": "100GB/day without license • 200GB/day with license"
+      },
+      "enterprise_with_license": {
+        "hero_title": "Your Enterprise Edition",
+        "offer_text": "You're running OpenObserve Enterprise with all features enabled",
+        "badge_text_unlimited": "Ingestion Limit: Unlimited",
+        "badge_text_limited": "Ingestion Limit: {limit}GB / day",
+        "features_title": "Active Enterprise Features",
+        "features_subtitle": "All features unlocked and ready to use",
+        "primary_button_text": "Manage License"
+      },
+      "open_source": {
+        "hero_title": "Get Enterprise Edition",
+        "offer_text": "Download and unlock all enterprise features completely free",
+        "badge_text": "Free up to 200GB / day",
+        "features_title": "Unlock All Enterprise Features",
+        "features_subtitle": "Everything you need for production-ready observability",
+        "primary_button_text": "Download Now"
+      },
+      "core_features": {
+        "logs_metrics_traces": {
+          "name": "Logs, Metrics, Traces",
+          "note": "Full observability data ingestion and analysis"
+        },
+        "rum": {
+          "name": "RUM",
+          "note": "Real User Monitoring for frontend performance"
+        },
+        "alerts": {
+          "name": "Alerts",
+          "note": "Real-time alerting and notifications"
+        },
+        "dashboards": {
+          "name": "Dashboards",
+          "note": "Customizable visualization dashboards"
+        },
+        "reports": {
+          "name": "Reports",
+          "note": "Scheduled and on-demand reporting"
+        },
+        "vrl_functions": {
+          "name": "VRL Functions",
+          "note": "Vector Remap Language for data transformation"
+        },
+        "pipelines": {
+          "name": "Pipelines",
+          "note": "Data processing and transformation pipelines"
+        },
+        "high_availability": {
+          "name": "High Availability",
+          "note": "Distributed architecture for reliability"
+        },
+        "multitenancy": {
+          "name": "Multitenancy",
+          "note": "Organization-based data isolation"
+        },
+        "dynamic_schema": {
+          "name": "Dynamic Schema",
+          "note": "Automatic schema detection and evolution"
+        },
+        "multilingual_gui": {
+          "name": "Multilingual GUI",
+          "note": "Advanced internationalization support"
+        }
+      },
+      "enterprise_features": {
+        "single_sign_on": {
+          "name": "Single Sign On",
+          "note": "Seamless authentication with SSO providers"
+        },
+        "rbac": {
+          "name": "Role Based Access Control",
+          "note": "Granular permissions and user management"
+        },
+        "federated_search": {
+          "name": "Federated Search / Supercluster",
+          "note": "Distribute queries across multiple clusters"
+        },
+        "query_management": {
+          "name": "Query Management",
+          "note": "Advanced query monitoring and optimization"
+        },
+        "workload_management": {
+          "name": "Workload Management",
+          "note": "Priority-based resource allocation and QoS"
+        },
+        "audit_trail": {
+          "name": "Audit Trail",
+          "note": "Complete activity logging for compliance"
+        },
+        "action_scripts": {
+          "name": "Action Scripts",
+          "note": "Automate responses to events and alerts"
+        },
+        "sensitive_data_redaction": {
+          "name": "Sensitive Data Redaction",
+          "note": "Protect PII and sensitive information"
+        },
+        "pipeline_remote_destinations": {
+          "name": "Pipeline Remote Destinations",
+          "note": "Send data to remote destinations"
+        },
+        "query_optimizer": {
+          "name": "Query Optimizer / Aggregation Cache",
+          "note": "TopK aggregation and query optimization"
+        },
+        "incident_management": {
+          "name": "Incident Management",
+          "note": "Track and manage incidents efficiently"
+        },
+        "sre_agent": {
+          "name": "SRE Agent",
+          "note": "Automated SRE operations and insights"
+        },
+        "ai_assistant": {
+          "name": "AI Assistant",
+          "note": "Intelligent query and analysis assistance"
+        },
+        "anomaly_detection": {
+          "name": "Anomaly Detection",
+          "note": "Automatically detect anomalies in data"
+        },
+        "metrics_auto_downsampling": {
+          "name": "Metrics Auto Downsampling",
+          "note": "Automatic metrics aggregation over time"
+        },
+        "log_patterns": {
+          "name": "Log Patterns",
+          "note": "Discover patterns in log data"
+        },
+        "mcp_server": {
+          "name": "MCP Server",
+          "note": "Model Context Protocol server integration"
+        },
+        "rate_limiting": {
+          "name": "Rate Limiting",
+          "note": "Control query and ingestion rates"
+        },
+        "broadcast_join": {
+          "name": "Broadcast Join",
+          "note": "Optimized distributed join operations"
+        },
+        "logs_metrics_traces_correlation": {
+          "name": "Logs, Metrics & Traces Correlation",
+          "note": "Automated detection and correlation"
+        },
+        "service_maps": {
+          "name": "Service Maps",
+          "note": "Visualize service dependencies"
+        }
+      },
+      "buttons": {
+        "contact_sales": "Contact Sales",
+        "learn_more": "Learn More"
+      },
+      "tooltip": {
+        "high_availability_mode_only": "High Availability mode only"
+      },
+      "error_messages": {
+        "not_authorized_manage_license": "You are not authorized to manage the license."
+      }
+    }
   },
   "login": {
     "userid": "User ID",
@@ -768,7 +1016,15 @@
     "showQuery": "Is Ingest-Time Function?",
     "stream_type": "Stream Type",
     "vrl": "VRL",
+    "javascript": "JavaScript",
     "lua": "Lua",
+    "transformType": "Transform Type",
+    "vrlType": "VRL (Vector Remap Language)",
+    "jsType": "JavaScript (ES2023)",
+    "vrlfunction": "VRL Function",
+    "jsfunction": "JavaScript Function",
+    "jsFunctionHint": "Use the `row` object to access and modify log fields. Example: row.new_field = row.existing_field + ' processed';",
+    "vrlFunctionHint": "Use the `.` to represent the current event. Example: .new_field = .existing_field + ' processed'",
     "params": "Parameters",
     "associatedWithStream": "Stream Association",
     "paramsHint": "param1, param2, etc.",
@@ -791,7 +1047,7 @@
     "close": "Close",
     "filterAll": "All",
     "filterFile": "File",
-    "filterUrl": "Url",
+    "filterUrl": "URL",
     "dataSource": "Data Source",
     "uploadFile": "Upload File",
     "fromUrl": "From URL",
@@ -1490,6 +1746,7 @@
     "multiWindow": "Compare with past",
     "multiWindowSubLabel": "Compare current results with data from another time period",
     "destination": "Destination",
+    "template": "Template Override",
     "additionalVariables": "Additional Variables",
     "description": "Description",
     "stream_name": "Stream Name",
@@ -1608,7 +1865,7 @@
       "defaultWindowDescription": "In absence of semantic field match, alerts and data from given duration is considered related",
       "defaultWindowPlaceholder": "Use alert period by default",
       "cancelButton": "Cancel",
-      "saveButton": "Save Settings"
+      "saveButton": "Save"
     },
     "placeholders": {
       "typeSomething": "Type something",
@@ -1682,6 +1939,7 @@
     "incidents": {
       "title": "Incidents",
       "header": "Alert Incidents",
+      "search": "Search incidents...",
       "noIncidents": "No incidents found",
       "id": "ID",
       "status": "Status",
@@ -1818,17 +2076,17 @@
     "spanIdFieldName": "Span ID Field Name",
     "toggleIngestionLogsLabel": "Toggle Ingestion Logs",
     "claimParserFunction": "SSO Claim Parser",
-    "claimParserFunctionDescription": "Select a VRL function to parse and transform SSO/LDAP claims into organization and role assignments",
-    "claimParserFunctionLabel": "Select VRL Function",
-    "claimParserFunctionHint": "Choose a VRL function from _meta org to parse SSO/LDAP claims",
+    "claimParserFunctionDescription": "Select a function (VRL or JavaScript) to parse and transform SSO/LDAP claims into organization and role assignments",
+    "claimParserFunctionLabel": "Select Function",
+    "claimParserFunctionHint": "Choose a function from _meta org to parse SSO/LDAP claims (VRL or JavaScript)",
     "claimParserFunctionSaved": "Claim parser function saved successfully",
     "errorSavingClaimParserFunction": "Error saving claim parser function",
-    "noVrlFunctionsFound": "No VRL functions found in _meta org",
-    "claimParserFunctionInfoTitle": "VRL Function Input and Output Format",
+    "noVrlFunctionsFound": "No functions found in _meta org",
+    "claimParserFunctionInfoTitle": "Function Input and Output Format",
     "claimParserFunctionInputTitle": "Input Format:",
-    "claimParserFunctionInputDescription": "The VRL function receives a JSON object containing claims mapped in Dex from your SSO/LDAP provider (e.g., email, name, groups, roles).",
+    "claimParserFunctionInputDescription": "The function receives a JSON object containing claims mapped in Dex from your SSO/LDAP provider (e.g., email, name, groups, roles).",
     "claimParserFunctionOutputTitle": "Output Format:",
-    "claimParserFunctionOutputDescription": "The VRL function must return one of these formats:",
+    "claimParserFunctionOutputDescription": "The function must return one of these formats:",
     "claimParserFunctionOutputExample1": "• Success: Return an array of objects, each with 'org' (string) and 'role' (string) fields",
     "claimParserFunctionOutputExample2": "• Deny: Return an object with 'deny' (boolean true) and 'reason' (string) fields",
     "claimParserRecentErrors": "Recent Errors (Last 24 Hours)",
@@ -1881,6 +2139,11 @@
     "platformSettings": "Platform Settings",
     "scrapeIntervalRequired": "Scrape interval is required",
     "scrapeIntervalDescription": "The scrape interval is the frequency, in seconds, at which the monitoring system collects metrics.",
+    "maxSeriesPerQueryLabel": "Max Series Per Query",
+    "maxSeriesPerQueryDescription": "Maximum number of series that can be returned from a single PromQL query. Helps prevent UI freezing with large result sets. Leave empty to use system default (40,000).",
+    "maxSeriesPerQueryTooltip": "When a PromQL query like 'count(metric) by (label)' returns too many series, it can freeze the UI. This limit prevents that. Set to null for system default, or specify a value between 1,000 and 1,000,000.",
+    "maxSeriesPerQueryValidation": "Value must be between 1,000 and 1,000,000, or leave empty for default",
+    "systemDefault": "system default",
     "manageTheme": "Manage Theme",
     "light": "Light",
     "dark": "Dark",
@@ -1959,26 +2222,27 @@
       "faas": "FaaS",
       "service": "Service",
       "serviceIdentityTitle": "Service Identity Configuration",
-      "serviceIdentityDescription": "Configure how services are identified and correlated across logs, traces, and metrics. The Service FQN (Fully Qualified Name) is derived from workload dimensions in priority order.",
+      "serviceIdentityDescription": "Configure how services are identified and correlated across logs, traces, and metrics. Service Identity combines scope dimensions (environment context) with workload dimensions (service name).",
+      "serviceIdentityLabel": "Service Identity",
       "howItWorksTitle": "How Service Identity Works",
-      "howItWorksDescription": "(Fully Qualified Name) is computed from your telemetry dimensions to uniquely identify and correlate services across different data sources.",
-      "priorityOrderLabel": "Priority Order:",
-      "priorityOrderDescription": "Dimensions are checked in the order listed below. The first dimension with a value becomes the Service FQN.",
+      "howItWorksDescription": "Service Identity uniquely identifies services by combining scope (cluster, region) with workload (deployment, service name).",
+      "compoundFqnLabel": "Identity Format:",
+      "compoundFqnDescription": "Scope dimensions are concatenated with '/', then the first non-null workload dimension is appended.",
       "exampleLabel": "Example:",
-      "exampleText": "If you have both {dim1} and {dim2}, the FQN will be {value} because k8s-deployment has higher priority.",
+      "exampleText": "With {dim1} and {dim2}, the identity becomes {value}.",
       "correlationLabel": "Correlation:",
-      "correlationDescription": "Services with the same FQN are correlated, even if they have different {field} names.",
-      "fqnPriorityTitle": "FQN Priority Dimensions",
-      "fqnPriorityTooltip": "Defines which dimensions are used to derive the Service FQN for correlation. First dimension with a value wins. Reorder to match your infrastructure.",
-      "fqnPriorityDescription": "Drag to reorder or use arrow buttons. First matching dimension determines Service FQN.",
-      "resetToDefaults": "Reset to Defaults",
+      "correlationDescription": "Services with the same identity are correlated, even if they have different {field} names.",
+      "fqnPriorityTitle": "Identity Priority Dimensions",
+      "fqnPriorityTooltip": "Defines which dimensions are used to derive the Service Identity. Scope dimensions (blue) are concatenated. The first workload dimension (green) with a value determines the service name.",
+      "fqnPriorityDescription": "Drag to reorder. Scope dimensions are concatenated, first non-null workload dimension wins.",
+      "resetToDefaults": "Reset to defaults",
       "noDimensionsConfigured": "No dimensions configured. Click \"Reset to Defaults\" or add dimensions below.",
       "addDimensionLabel": "Add dimension to priority list",
       "addDimensionHint": "Select a semantic group to add to the priority list.",
       "selectSemanticGroup": "Select Semantic Group",
       "noSemanticGroupsAvailable": "No semantic groups available. Configure field mappings below first.",
       "noSemanticGroupsConfigured": "No semantic groups configured. Add field mappings below to define available dimensions.",
-      "configureSemanticGroupsFirst": "Configure semantic field mappings below to define available dimensions for FQN priority.",
+      "configureSemanticGroupsFirst": "Configure semantic field mappings below to define available dimensions for identity priority.",
       "moveUp": "Move up (higher priority)",
       "moveDown": "Move down (lower priority)",
       "removeFromList": "Remove from priority list",
@@ -1986,10 +2250,10 @@
       "semanticFieldTooltip": "Maps different field names to semantic dimensions. For example, \"deployment\", \"k8s.deployment.name\", and \"kube_deployment\" all map to \"k8s-deployment\".",
       "semanticFieldDescription": "Configure how field names from your telemetry are mapped to semantic dimensions.",
       "saveConfiguration": "Save Configuration",
-      "saveFqnPriority": "Save FQN Priority",
+      "saveFqnPriority": "Save Identity Priority",
       "saveSemanticMappings": "Save Semantic Mappings",
       "configSavedSuccess": "Service identity configuration saved successfully",
-      "fqnPrioritySaved": "FQN priority configuration saved successfully",
+      "fqnPrioritySaved": "Identity priority configuration saved successfully",
       "semanticMappingsSaved": "Semantic field mappings saved successfully",
       "configSaveFailed": "Failed to save settings",
       "correlationSettingsSaved": "Correlation settings saved successfully.",
@@ -1997,7 +2261,27 @@
       "traces": "Traces",
       "metrics": "Metrics",
       "retry": "Retry",
-      "filters": "Filters"
+      "filters": "Filters",
+      "priorityOrderLabel": "Priority Order",
+      "availableDimensions": "Available Dimensions",
+      "semanticFieldGroupsTitle": "Field Mappings",
+      "groupsLabel": "groups",
+      "noMatchingGroups": "No matching groups",
+      "fqnFormulaTitle": "Identity Formula",
+      "fqnFormulaTooltip": "Shows how the Service Identity will be computed. Scope dimensions (blue) are concatenated with '/'. The first non-null workload dimension (green) becomes the service name.",
+      "scopeDimension": "Scope dimension",
+      "workloadDimension": "Workload dimension",
+      "noFormulaConfigured": "No identity formula configured. Add dimensions above.",
+      "scopeLegend": "Scope (concatenated)",
+      "workloadLegend": "Workload (first non-null)",
+      "firstNonNull": "first non-null of",
+      "scopeTag": "Scope",
+      "workloadTag": "Workload",
+      "scopeOnly": "scope only",
+      "noMatchingDimensions": "No matching dimensions",
+      "otherGroup": "Other",
+      "fallbackGroup": "Fallback",
+      "fallbackNote": "Fallback dimensions (like 'service') apply across all environments when no environment-specific workload matches."
     }
   },
   "reports": {
@@ -2049,7 +2333,13 @@
     "viewRelated": "View Related",
     "backToLogs": "Back to Logs",
     "RedMetrics": "RED Metrics",
-    "loadingStream": "Loading Stream..."
+    "loadingStream": "Loading Stream...",
+    "noTracesFound": "Result not found.",
+    "configureFullTextSearch": "to configure a full text search field to the stream.",
+    "collapseFields": "Collapse Fields",
+    "openFields": "Open Fields",
+    "timeRangeUpdated": "The selected time range did not include this trace. The time range has been updated to match the trace's timestamp.",
+    "fetchingMoreTraces": "Fetching more traces..."
   },
   "actions": {
     "testAction": "Test action",
@@ -2219,7 +2509,29 @@
     "tracesFromService": "Traces from service: {service}",
     "noTracesFound": "No correlated traces found",
     "noTracesDescription": "No traces found for service {service} in the selected time range",
-    "filters": "Filters"
+    "filters": "Filters",
+    "semanticFieldGroupsTitle": "Field Mappings",
+    "semanticFieldGroupsCaption": "Define field name mappings for correlation and deduplication (e.g., host, hostname, node → 'host' group)",
+    "groupsLabel": "groups",
+    "importFromJson": "Import from JSON",
+    "addCustomGroup": "Add Custom Group",
+    "actionNormalize": "Lowercase and trim values for matching",
+    "removeSemanticGroup": "Remove Semantic Group",
+    "fieldNamePlaceholder": "Field names (comma-separated)",
+    "category": "Category",
+    "categoryHint": "Filter groups by category",
+    "noSemanticGroupMessage": "No semantic groups in this category. Select a different category or add a custom group.",
+    "showingGroups": "Showing {filterGroupLength} of {localGroupLength} total groups",
+    "deduplicateFields": "Deduplication Fields",
+    "deduplicateFieldTooltip": "Select which field mappings to use for deduplication fingerprinting",
+    "alertDeduplicationMessage": "Alerts with the same values for these fields will be deduplicated (e.g., same fingerprint = same field values)",
+    "atLeastOneDeduplicationField": "At least one field mapping is required for deduplication",
+    "scope": "Scope",
+    "scopeTooltip": "Scope dimensions define environmental boundaries (cluster, region, host) and are concatenated to form the scope part of the FQN: {scope}/{workload}",
+    "stable": "Stable",
+    "stableTooltip": "Stable dimensions have low cardinality and are used for correlation key computation",
+    "normalize": "Normalize",
+    "noSemanticGroupsInCategory": "No semantic groups in category: {category}"
   },
   "search_scheduler_job": {
     "title": "Search Job Scheduler",

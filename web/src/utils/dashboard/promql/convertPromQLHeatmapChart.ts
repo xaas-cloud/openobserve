@@ -1,4 +1,4 @@
-// Copyright 2023 Zinc Labs Inc.
+// Copyright 2023 OpenObserve Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -144,7 +144,6 @@ export class HeatmapConverter implements PromQLChartConverter {
       },
       tooltip: {
         position: "top",
-        confine: true,
         textStyle: {
           color: store.state.theme === "dark" ? "#fff" : "#000",
           fontSize: 12,

@@ -56,11 +56,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             dense
             clearable
             debounce="1"
-            placeholder="Search Event"
+            :placeholder="t('rum.searchEvents')"
             @update:model-value="searchEvents"
           />
         </div>
-        <div class="q-pl-xs event-type-selector tw:w-[40%]">
+        <div class="q-pl-xs event-type-selector tw:w-[40%] relative-position">
           <q-select
             v-model="selectedEventTypes"
             :options="eventOptions"
@@ -71,6 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             dense
             emit-value
             size="xs"
+            data-test="player-events-filter-select"
             @update:model-value="searchEvents(searchEvent)"
           />
         </div>
@@ -84,16 +85,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <div
             class="q-mt-xs q-px-sm event-container q-py-sm cursor-pointer rounded-borders"
             @click="handleEventClick(filteredEvent)"
+            :data-test="`player-event-row-${filteredEvent.type}`"
           >
             <div class="ellipsis">
-              <div class="q-mr-md inline">{{ filteredEvent.displayTime }}</div>
+              <div class="q-mr-md inline" data-test="event-display-time">{{ filteredEvent.displayTime }}</div>
               <div
                 class="q-mr-md inline event-type q-px-xs tw:rounded-[0.25rem]"
                 :class="filteredEvent.type === 'error' ? 'bg-red-3' : ''"
+                data-test="event-type-badge"
               >
                 {{ filteredEvent.type }}
               </div>
-              <div class="inline" :title="filteredEvent.name">
+              <template
+                v-if="
+                  filteredEvent.frustration_types &&
+                  filteredEvent.frustration_types.length > 0
+                "
+              >
+                <FrustrationEventBadge
+                  :frustration-types="filteredEvent.frustration_types"
+                  class="q-mr-xs inline"
+                />
+              </template>
+              <div class="inline" :title="filteredEvent.name" data-test="event-name">
                 {{ filteredEvent.name }}
               </div>
             </div>
@@ -107,6 +121,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import AppTabs from "../common/AppTabs.vue";
+import { useI18n } from "vue-i18n";
+import FrustrationEventBadge from "./FrustrationEventBadge.vue";
+
+const { t } = useI18n();
 
 const props = defineProps({
   events: {
@@ -122,12 +140,12 @@ const props = defineProps({
 const activeTab = ref<string>("breadcrumbs");
 const tabs = [
   {
-    label: "Breadcrumbs",
+    label: t("rum.breadcrumbs"),
     value: "breadcrumbs",
     style: { width: "fit-content", padding: "0.5rem 0.625rem", "margin-right": "0.25rem" },
   },
   {
-    label: "Tags",
+    label: t("rum.tags"),
     value: "tags",
     style: { width: "fit-content", padding: "0.5rem 0.625rem" },
   },
@@ -145,13 +163,14 @@ watch(
   { immediate: true, deep: true }
 );
 
-const selectedEventTypes = ref<string[]>(["error", "action", "view"]);
+const selectedEventTypes = ref<string[]>(["error", "action", "view", "frustration"]);
 const searchEvent = ref<string>("");
 
 const eventOptions = [
   { label: "Error", value: "error" },
   { label: "Action", value: "action" },
   { label: "View", value: "view" },
+  { label: "Frustration", value: "frustration" },
 ];
 
 const searchEvents = (value: string | number | null) => {
@@ -160,12 +179,22 @@ const searchEvents = (value: string | number | null) => {
   }
   const _value = value.toString();
   filteredEvents.value = props.events.filter((event: any) => {
-    return (
-      selectedEventTypes.value.includes(event.type) &&
-      (event.type + " " + event?.name)
-        .toLowerCase()
-        .includes(_value.toString().toLowerCase())
-    );
+    // Check if event type is selected
+    const isTypeSelected = selectedEventTypes.value.includes(event.type);
+
+    // Check if frustration filter is active and event has frustrations
+    const hasFrustration = event.frustration_types && event.frustration_types.length > 0;
+    const showFrustration = selectedEventTypes.value.includes("frustration") && hasFrustration;
+
+    // Show event if its type is selected OR if frustration filter is active and event has frustrations
+    const shouldShow = isTypeSelected || showFrustration;
+
+    // Apply text search filter
+    const matchesSearch = (event.type + " " + event?.name)
+      .toLowerCase()
+      .includes(_value.toString().toLowerCase());
+
+    return shouldShow && matchesSearch;
   });
 };
 
@@ -194,6 +223,15 @@ const handleEventClick = (event: any) => {
 .event-container:hover {
   background-color: #ededed;
   color: black;
+}
+
+.frustration-count-badge {
+  position: absolute;
+  top: -0.375rem;
+  right: -0.375rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  z-index: 1;
 }
 
 .event-type {

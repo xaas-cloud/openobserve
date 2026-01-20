@@ -37,7 +37,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   >
     <template v-slot:body-cell="props">
       <q-td :props="props" :style="getStyle(props)" class="copy-cell-td">
-        <div class="flex items-center no-wrap copy-cell-content">
+        <!-- Copy button on left for numeric/right-aligned columns -->
+        <q-btn
+          v-if="props.col.align === 'right' && shouldShowCopyButton(props.value)"
+          :icon="
+            isCellCopied(props.rowIndex, props.col.name)
+              ? 'check'
+              : 'content_copy'
+          "
+          dense
+          size="xs"
+          no-caps
+          flat
+          class="copy-btn q-mr-xs"
+          @click.stop="
+            copyCellContent(props.value, props.rowIndex, props.col.name)
+          "
+        >
+        </q-btn>
           <!-- Use JsonFieldRenderer if column is marked as JSON -->
           <JsonFieldRenderer
             v-if="props.col.showFieldAsJson"
@@ -45,17 +62,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           />
           <!-- Otherwise show normal value -->
           <template v-else>
-            <span class="q-mr-xs">
               {{
-                props.value == "undefined" || props.value === null
+                props.value === "undefined" || props.value === null
                   ? ""
                   : props.col.format
                     ? props.col.format(props.value, props.row)
                     : props.value
               }}
-            </span>
           </template>
+        <!-- Copy button on right for non-numeric columns -->
           <q-btn
+            v-if="props.col.align !== 'right' && shouldShowCopyButton(props.value)"
             :icon="
               isCellCopied(props.rowIndex, props.col.name)
                 ? 'check'
@@ -64,19 +81,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             dense
             size="xs"
             no-caps
-            class="copy-btn"
+            flat
+            class="copy-btn q-ml-xs"
             @click.stop="
               copyCellContent(props.value, props.rowIndex, props.col.name)
             "
           >
           </q-btn>
-        </div>
       </q-td>
     </template>
 
     <!-- Expose a bottom slot so callers (e.g., PromQL table) can provide footer content -->
-    <template v-slot:bottom>
-      <slot name="bottom" />
+    <template v-slot:bottom="scope" v-if="$slots.bottom">
+      <slot name="bottom" v-bind="scope" />
     </template>
   </q-table>
 </template>
@@ -266,6 +283,13 @@ export default defineComponent({
       return copiedCells.value.has(`${rowIndex}_${colName}`);
     };
 
+    const shouldShowCopyButton = (value: any) => {
+      if (value === null || value === undefined) return false;
+      if (value === "undefined") return false;
+      const stringValue = String(value).trim();
+      return stringValue !== "";
+    };
+
     const copyCellContent = (value: any, rowIndex: number, colName: string) => {
       if (value === null || value === undefined) return;
 
@@ -280,19 +304,8 @@ export default defineComponent({
           setTimeout(() => {
             copiedCells.value.delete(key);
           }, 3000);
-
-          $q.notify({
-            type: "positive",
-            message: "Copied to clipboard",
-            timeout: 1000,
-          });
         })
         .catch(() => {
-          $q.notify({
-            type: "negative",
-            message: "Failed to copy",
-            timeout: 1000,
-          });
         });
     };
 
@@ -307,6 +320,7 @@ export default defineComponent({
       store,
       copyCellContent,
       isCellCopied,
+      shouldShowCopyButton,
     };
   },
 });
@@ -372,13 +386,6 @@ export default defineComponent({
     white-space: normal !important;
   }
 
-  // also ensure the inner content (which uses flex and a 'no-wrap' utility) allows wrapping
-  :deep(.copy-cell-content) {
-    white-space: normal !important;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    flex-wrap: wrap !important;
-  }
 }
 
 .copy-cell-td {

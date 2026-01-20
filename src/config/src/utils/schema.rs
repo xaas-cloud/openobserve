@@ -1,4 +1,4 @@
-// Copyright 2025 OpenObserve Inc.
+// Copyright 2026 OpenObserve Inc.
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Affero General Public License as published by
@@ -131,9 +131,9 @@ fn infer_json_schema_from_object(
                 } else if v.is_f64() {
                     convert_data_type(fields, key, DataType::Float64)?;
                 } else {
-                    return Err(ArrowError::SchemaError(
-                        "Cannot infer schema from non-basic-number type value".to_string(),
-                    ));
+                    return Err(ArrowError::SchemaError(format!(
+                        "Cannot infer schema from non-basic-number type value: {v:?}",
+                    )));
                 }
             }
             Value::Bool(_) => {

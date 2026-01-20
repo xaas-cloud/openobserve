@@ -267,11 +267,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                   :isAggregationEnabled="isAggregationEnabled"
                   :destinations="formData.destinations"
                   :formattedDestinations="getFormattedDestinations"
+                  :template="formData.template"
+                  :templates="templates"
                   @update:trigger="(val) => formData.trigger_condition = val"
                   @update:aggregation="(val) => formData.query_condition.aggregation = val"
                   @update:isAggregationEnabled="(val) => isAggregationEnabled = val"
+                  @update:promqlCondition="(val) => formData.query_condition.promql_condition = val"
                   @update:destinations="updateDestinations"
+                  @update:template="(val) => formData.template = val"
                   @refresh:destinations="refreshDestinations"
+                  @refresh:templates="refreshTemplates"
                 />
               </div>
 
@@ -582,6 +587,7 @@ const defaultValue: any = () => {
       timezone: "UTC",
     },
     destinations: [],
+    template: "",
     context_attributes: [],
     enabled: true,
     description: "",
@@ -611,8 +617,12 @@ export default defineComponent({
       type: Array,
       default: () => [],
     },
+    templates: {
+      type: Array,
+      default: () => [],
+    },
   },
-  emits: ["update:list", "cancel:hideform", "refresh:destinations"],
+  emits: ["update:list", "cancel:hideform", "refresh:destinations", "refresh:templates"],
   components: {
     JsonEditor,
     HorizontalStepper,
@@ -1178,6 +1188,14 @@ export default defineComponent({
       } else if (newType === 'promql') {
         previewQuery.value = formData.value.query_condition?.promql ? formData.value.query_condition.promql.trim() : '';
         isUsingBackendSql.value = false;
+        // Initialize promql_condition if it doesn't exist
+        if (!formData.value.query_condition.promql_condition) {
+          formData.value.query_condition.promql_condition = {
+            column: 'value',
+            operator: '>=',
+            value: 1,
+          };
+        }
       } else if (newType === 'custom') {
         // Start with local SQL, backend SQL will update it when ready
         previewQuery.value = generateSqlQueryLocal();
@@ -1581,6 +1599,9 @@ export default defineComponent({
     const refreshDestinations = () => {
       emit("refresh:destinations");
     }
+    const refreshTemplates = () => {
+      emit("refresh:templates");
+    }
     const updateDestinations = (destinations: any[]) => {
       formData.value.destinations = destinations;
     }
@@ -1673,7 +1694,41 @@ export default defineComponent({
           if (panelData.queries && panelData.queries.length > 0) {
             const query = panelData.queries[0];
 
-            formData.value.name = `Alert from ${panelData.panelTitle}`;
+            // Sanitize panel title for use in alert name
+            // Remove invalid characters (: # ? & % ' " and whitespace)
+            // Collapse multiple underscores, trim leading/trailing underscores
+            // Limit length to 200 characters (reasonable limit for alert names)
+            const sanitizePanelTitle = (title: string | undefined): string => {
+              if (!title || title.trim() === '') {
+                return 'panel';
+              }
+
+              // Replace invalid characters with underscores
+              let sanitized = title.replace(/[:#?&%'"\s]+/g, '_');
+
+              // Collapse multiple consecutive underscores into single underscore
+              sanitized = sanitized.replace(/_+/g, '_');
+
+              // Remove leading/trailing underscores
+              sanitized = sanitized.replace(/^_+|_+$/g, '');
+
+              // If empty after sanitization, use default
+              if (sanitized === '') {
+                return 'panel';
+              }
+
+              // Truncate to reasonable length (leaving room for "Alert_from_" prefix)
+              const maxLength = 200;
+              if (sanitized.length > maxLength) {
+                sanitized = sanitized.substring(0, maxLength);
+                // Remove trailing underscore if truncation created one
+                sanitized = sanitized.replace(/_+$/, '');
+              }
+
+              return sanitized;
+            };
+
+            formData.value.name = `Alert_from_${sanitizePanelTitle(panelData.panelTitle)}`;
 
             // Show notification that query was imported
             q.notify({
@@ -1832,6 +1887,7 @@ export default defineComponent({
                 // For PromQL: Set up promql_condition with the threshold
                 if (!formData.value.query_condition.promql_condition) {
                   formData.value.query_condition.promql_condition = {
+                    column: 'value',
                     operator: '>=',
                     value: 1,
                   };
@@ -2152,6 +2208,7 @@ export default defineComponent({
       updateExpandState,
       updateSilence,
       refreshDestinations,
+      refreshTemplates,
       updateDestinations,
       updateTab,
       updateGroup,
@@ -2232,6 +2289,23 @@ export default defineComponent({
       this.disableColor = "grey-5";
       this.formData = cloneDeep(this.modelValue);
       this.isAggregationEnabled = !!this.formData.query_condition.aggregation;
+
+      // Defensive initialization for legacy or malformed promql_condition
+      // Ensures all required fields are present (column, operator, value)
+      // this makes sure that we dont pass any null values while creating or updating an existing alert
+      if (this.formData.query_condition.promql_condition) {
+        if (!this.formData.query_condition.promql_condition.column) {
+          this.formData.query_condition.promql_condition.column = 'value';
+        }
+        if (!this.formData.query_condition.promql_condition.operator) {
+          this.formData.query_condition.promql_condition.operator = '>=';
+        }
+        if (this.formData.query_condition.promql_condition.value === undefined ||
+            this.formData.query_condition.promql_condition.value === null) {
+          this.formData.query_condition.promql_condition.value = 1;
+        }
+      }
+
       // Enable all steps when editing an existing alert
       this.lastValidStep = 6;
 

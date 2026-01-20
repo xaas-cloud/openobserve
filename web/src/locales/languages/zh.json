@@ -105,7 +105,11 @@
     "lightMode": "灯光模式",
     "darkMode": "黑暗模式",
     "manageTheme": "管理主题",
-    "url": "网址"
+    "url": "网址",
+    "chunkLoadError": "该应用程序的新版本可用。请刷新页面继续。",
+    "chunkLoadErrorMsg": "该应用程序的新版本可用。请刷新页面继续。",
+    "id": "身份证",
+    "getStarted": "开始吧"
   },
   "search": {
     "selectIndex": "选择数据流",
@@ -332,7 +336,8 @@
     "report": "报表",
     "pipeline": "流水线",
     "language": "语言",
-    "actions": "操作"
+    "actions": "操作",
+    "incidents": "事件"
   },
   "rum": {
     "title": "用户体验监控",
@@ -369,7 +374,23 @@
     "sizekb": "大小 (kb)",
     "viewURL": "查看网址",
     "events": "事件",
-    "location": "地点"
+    "location": "地点",
+    "frustrationCount": "挫折",
+    "loadingMsg": "等一下，我们正在加载 RUM 数据。",
+    "breadcrumbs": "面包屑",
+    "tags": "标签",
+    "searchEvents": "搜索活动",
+    "loadingSessions": "等一下，我们正在获取会话。",
+    "errorStack": "错误堆栈",
+    "sessionReplay": "会话重播",
+    "viewSessionReplay": "查看会话重播",
+    "playSessionReplay": "播放会话重播",
+    "discoverSessionTitle": "探索会话回放以详细了解用户互动",
+    "discoverSessionMessage": "Session Replay 捕获并重播您的网站或应用程序上的用户互动。这使您可以直观地查看用户的导航方式、点击的位置、键入的内容以及他们如何与您的内容互动",
+    "getStartedRUM": "开始使用真实用户监控",
+    "loadingErrorDetails": "等一下，我们正在获取错误细节。",
+    "eventID": "事件 ID",
+    "loadingApplicationErrors": "等一下，我们正在提取应用程序错误。"
   },
   "about": {
     "name": "OpenObserve",
@@ -410,7 +431,236 @@
     "community_lbl": "社区",
     "loading_license_info": "正在加载许可证信息...",
     "installation_id_lbl": "安装 ID",
-    "expired_lbl": "已过期"
+    "expired_lbl": "已过期",
+    "feature_comparision_subtitle": "比较开源、企业和云产品的功能",
+    "feature_column_name": "特征",
+    "edition_opensource": "开源（自托管）",
+    "edition_enterprise": "企业版（自托管）",
+    "edition_cloud": "云",
+    "feature_logs": "日志",
+    "feature_metrics": "指标",
+    "feature_traces": "痕迹",
+    "feature_rum": "朗姆酒",
+    "feature_alerts": "警报",
+    "feature_dashboards": "仪表板",
+    "feature_reports": "报告",
+    "feature_vrl_functions": "VRL 函数",
+    "feature_pipelines": "管道",
+    "feature_high_availability": "高可用性",
+    "feature_multitenancy": "多租户（组织）",
+    "feature_dynamic_schema": "动态架构和架构演变",
+    "feature_multilingual_gui": "高级多语言 GUI",
+    "feature_sso": "单点登录",
+    "feature_rbac": "基于角色的访问控制 (RBAC)",
+    "feature_federated_search": "联合搜索/超级集群",
+    "feature_query_management": "查询管理",
+    "feature_workload_management": "工作负载管理 (QoS)",
+    "feature_audit_trail": "审计跟踪",
+    "feature_action_scripts": "操作脚本",
+    "feature_sensitive_data_redaction": "敏感数据编辑",
+    "feature_influence_roadmap": "影响路线图的能力",
+    "feature_license": "执照",
+    "feature_support": "支持",
+    "feature_cost": "成本",
+    "feature_pipelines_external": "管道-外部目的地",
+    "feature_extreme_performance": "极致性能（许多查询提高了 100 倍）",
+    "feature_query_optimizer": "查询优化器",
+    "value_sso_requires_ha": "✅ 需要 HA 模式",
+    "value_rbac_requires_ha": "✅ 需要 HA 模式",
+    "value_roadmap_enterprise_plan": "✅ 在企业计划上",
+    "value_license_agpl": "AGPL",
+    "value_license_enterprise": "企业",
+    "value_license_cloud": "云",
+    "value_support_community": "社区",
+    "value_support_enterprise": "企业",
+    "value_support_cloud": "云",
+    "value_cost_free": "免费",
+    "value_cost_enterprise": "如果是自托管，则每天最多可免费摄取 200 GB 的数据。之后付款",
+    "value_cost_cloud": "14 天免费试用。之后付款",
+    "feature_comparison_lbl": "功能对比",
+    "enterprise_offer": {
+      "cloud": {
+        "hero_title": "企业功能",
+        "offer_text": "自托管 OpenObserve 即可完全免费获得所有企业功能",
+        "badge_text": "免费高达 200GB /天",
+        "features_title": "OpenObserve",
+        "features_subtitle": "您的云订阅中包含的所有功能",
+        "primary_button_text": "立即下载"
+      },
+      "enterprise_without_license": {
+        "hero_title": "企业功能",
+        "offer_text": "申请免费许可证以最大限度地部署 OpenObserve",
+        "badge_text": "免费高达 {配额} GB /天",
+        "features_title": "可用的企业功能",
+        "features_subtitle": "获取免费许可证以解锁无限功能",
+        "primary_button_text": "获取免费许可证",
+        "license_note": "没有许可证 100GB/天 • 有许可证则为每天 200GB"
+      },
+      "enterprise_with_license": {
+        "hero_title": "您的企业版",
+        "offer_text": "你正在运行启用所有功能的 OpenObserve 企业版",
+        "badge_text_unlimited": "摄取限制：无限制",
+        "badge_text_limited": "摄取限制：{限制} GB/天",
+        "features_title": "活跃的企业功能",
+        "features_subtitle": "所有功能均已解锁，可供使用",
+        "primary_button_text": "管理许可证"
+      },
+      "open_source": {
+        "hero_title": "获取企业版",
+        "offer_text": "完全免费下载和解锁所有企业功能",
+        "badge_text": "免费高达 200GB /天",
+        "features_title": "解锁所有企业版功能",
+        "features_subtitle": "生产就绪可观测性所需的一切",
+        "primary_button_text": "立即下载"
+      },
+      "core_features": {
+        "logs_metrics_traces": {
+          "name": "日志、指标、跟踪",
+          "note": "全面的可观测性数据摄取和分析"
+        },
+        "rum": {
+          "name": "朗姆酒",
+          "note": "对前端性能进行真实用户监控"
+        },
+        "alerts": {
+          "name": "警报",
+          "note": "实时警报和通知"
+        },
+        "dashboards": {
+          "name": "仪表板",
+          "note": "自定义的可视化仪表板"
+        },
+        "reports": {
+          "name": "报告",
+          "note": "定期报告和按需报告"
+        },
+        "vrl_functions": {
+          "name": "VRL 函数",
+          "note": "用于数据转换的矢量重映射语言"
+        },
+        "pipelines": {
+          "name": "管道",
+          "note": "数据处理和转换管道"
+        },
+        "high_availability": {
+          "name": "高可用性",
+          "note": "分布式架构确保可靠性"
+        },
+        "multitenancy": {
+          "name": "多租户",
+          "note": "基于组织的数据隔离"
+        },
+        "dynamic_schema": {
+          "name": "动态架构",
+          "note": "自动架构检测和演变"
+        },
+        "multilingual_gui": {
+          "name": "多语言 GUI",
+          "note": "高级国际化支持"
+        }
+      },
+      "enterprise_features": {
+        "single_sign_on": {
+          "name": "单点登录",
+          "note": "与 SSO 提供商进行无缝身份验证"
+        },
+        "rbac": {
+          "name": "基于角色的访问控制",
+          "note": "精细的权限和用户管理"
+        },
+        "federated_search": {
+          "name": "联合搜索/超级集群",
+          "note": "在多个集群之间分配查询"
+        },
+        "query_management": {
+          "name": "查询管理",
+          "note": "高级查询监控和优化"
+        },
+        "workload_management": {
+          "name": "工作负载管理",
+          "note": "基于优先级的资源分配和 QoS"
+        },
+        "audit_trail": {
+          "name": "审计追踪",
+          "note": "完成活动记录以确保合规性"
+        },
+        "action_scripts": {
+          "name": "操作脚本",
+          "note": "自动响应事件和警报"
+        },
+        "sensitive_data_redaction": {
+          "name": "敏感数据编辑",
+          "note": "保护 PII 和敏感信息"
+        },
+        "pipeline_remote_destinations": {
+          "name": "管道远程目的地",
+          "note": "将数据发送到远程目的地"
+        },
+        "query_optimizer": {
+          "name": "查询优化器/聚合缓存",
+          "note": "TopK 聚合和查询优化"
+        },
+        "incident_management": {
+          "name": "事故管理",
+          "note": "高效跟踪和管理事件"
+        },
+        "sre_agent": {
+          "name": "SRE 代理",
+          "note": "自动化 SRE 操作和见解"
+        },
+        "ai_assistant": {
+          "name": "人工智能助手",
+          "note": "智能查询和分析协助"
+        },
+        "anomaly_detection": {
+          "name": "异常检测",
+          "note": "自动检测数据中的异常"
+        },
+        "metrics_auto_downsampling": {
+          "name": "指标自动下采样",
+          "note": "随时间推移自动汇总指标"
+        },
+        "log_patterns": {
+          "name": "日志模式",
+          "note": "发现日志数据中的模式"
+        },
+        "mcp_server": {
+          "name": "MCP 服务器",
+          "note": "模型上下文协议服务器集成"
+        },
+        "rate_limiting": {
+          "name": "速率限制",
+          "note": "控制查询和摄取率"
+        },
+        "broadcast_join": {
+          "name": "广播加入",
+          "note": "优化的分布式联接操作"
+        },
+        "logs_metrics_traces_correlation": {
+          "name": "日志、指标和跟踪的关联",
+          "note": "自动检测和关联"
+        },
+        "service_maps": {
+          "name": "服务地图",
+          "note": "可视化服务依赖关系"
+        }
+      },
+      "buttons": {
+        "contact_sales": "联系销售人员",
+        "learn_more": "了解更多"
+      },
+      "tooltip": {
+        "high_availability_mode_only": "仅限高可用性模式"
+      },
+      "error_messages": {
+        "not_authorized_manage_license": "您无权管理许可证。"
+      }
+    },
+    "header_button": {
+      "cloud_features": "开放观察功能",
+      "enterprise_edition": "版本：企业版",
+      "get_enterprise_free": "获取OpenObserve 企业版（免费）"
+    }
   },
   "login": {
     "userid": "账号",
@@ -655,7 +905,14 @@
     "dataSource": "数据源",
     "uploadFile": "上传文件",
     "fromUrl": "来自 URL",
-    "addFunction": "添加函数"
+    "addFunction": "添加函数",
+    "javascript": "JavaScript的",
+    "transformType": "变换类型",
+    "vrlType": "VRL（矢量重映射语言）",
+    "jsType": "脚本 (ES2023)",
+    "vrlfunction": "VRL 函数",
+    "jsFunctionHint": "使用 `row`对象访问和修改日志字段。示例：row.new_field = row.existing_field + 'processed';",
+    "vrlFunctionHint": "使用 `.` 表示当前事件。示例：.new_field = .existing_field + “已处理”"
   },
   "confirmDialog": {
     "cancel": "取消",
@@ -1547,7 +1804,8 @@
       "alertSettings": "设置警报规则并选择您希望以何种方式收到通知。",
       "deduplication": "通过将相似的警报分组在一起，避免多次发送相同的警报。",
       "advanced": "上下文变量、描述和行模板"
-    }
+    },
+    "template": "模板"
   },
   "alert_templates": {
     "header": "模板",
@@ -1823,7 +2081,12 @@
     "logoTextUpdatedSuccessfully": "徽标文本已成功更新。",
     "errorUpdatingImage": "更新图像时出错。",
     "fileFormatConstraint": "（仅限 .png、.jpg、.jpeg、.gif、.bmp 格式，最大大小：150x30px）",
-    "filesValidationFailed": "{count} 个文件未通过验证限制"
+    "filesValidationFailed": "{count} 个文件未通过验证限制",
+    "maxSeriesPerQueryLabel": "每个查询的最大序列数",
+    "maxSeriesPerQueryDescription": "单个 PromQL 查询可以返回的最大序列数。使用大型结果集有助于防止界面冻结。留空以使用系统默认值 (40,000)。",
+    "maxSeriesPerQueryTooltip": "当像 “按（标签）计数（指标）” 这样的 PromQL 查询返回的序列过多时，它可能会冻结用户界面。这个限制可以防止这种情况。将系统默认值设置为空，或指定一个介于 1,000 和 1,000,000 之间的值。",
+    "maxSeriesPerQueryValidation": "值必须介于 1,000 和 1,000,000 之间，或留空作为默认值",
+    "systemDefault": "系统默认"
   },
   "iam": {
     "users": "用户",
@@ -1979,7 +2242,13 @@
     "backToLogs": "返回日志",
     "RedMetrics": "RED 指标",
     "loadingStream": "正在加载数据流...",
-    "viewRelated": "查看相关"
+    "viewRelated": "查看相关",
+    "noTracesFound": "未找到结果。",
+    "configureFullTextSearch": "为直播配置全文搜索字段。",
+    "collapseFields": "折叠字段",
+    "openFields": "打开字段",
+    "timeRangeUpdated": "所选时间范围不包括此跟踪。时间范围已更新，以匹配跟踪的时间戳。",
+    "fetchingMoreTraces": "正在获取更多痕迹..."
   },
   "invitation": {
     "pendingInvitations": "待处理的邀请",
@@ -2294,7 +2563,29 @@
     "noTracesFound": "未找到相关的痕迹",
     "noTracesDescription": "在所选时间范围内未找到服务 {service} 的跟踪",
     "openTraceInNewWindow": "在新窗口中打开 trace",
-    "filters": "过滤器"
+    "filters": "过滤器",
+    "semanticFieldGroupsTitle": "字段映射",
+    "semanticFieldGroupsCaption": "为关联和重复数据删除定义字段名称映射（例如，主机、主机名、节点 → “主机” 组）",
+    "groupsLabel": "组",
+    "importFromJson": "从 JSON 导入",
+    "addCustomGroup": "添加自定义群组",
+    "actionNormalize": "用于匹配的小写和修剪值",
+    "removeSemanticGroup": "移除语义组",
+    "fieldNamePlaceholder": "字段名称（以逗号分隔）",
+    "category": "类别",
+    "categoryHint": "按类别筛选群组",
+    "noSemanticGroupMessage": "该类别中没有语义组。选择其他类别或添加自定义群组。",
+    "showingGroups": "显示 {localGroupLength} 组总数中的 {filterGroupLength}",
+    "deduplicateFields": "重复数据删除字段",
+    "deduplicateFieldTooltip": "选择使用哪些字段映射进行重复数据删除指纹识别",
+    "alertDeduplicationMessage": "将对这些字段具有相同值的警报进行重复数据消除（例如，相同的指纹 = 相同的字段值）",
+    "atLeastOneDeduplicationField": "重复数据删除至少需要一个字段映射",
+    "scope": "范围",
+    "scopeTooltip": "范围维度定义环境边界（集群、区域、主机），并串联起来构成 FQN 的范围部分：{scope}/{workload}",
+    "stable": "稳定",
+    "stableTooltip": "稳定维度基数低，用于关联键计算",
+    "normalize": "正常化",
+    "noSemanticGroupsInCategory": "类别中没有语义组：{category}"
   },
   "sreChat": {
     "emptyMessage": "向我询问有关您的告警和事件的任何信息",

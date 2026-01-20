@@ -16,7 +16,10 @@
 use std::{
     collections::{BTreeMap, HashMap, HashSet},
     io::Write,
-    sync::{Arc, atomic::Ordering},
+    sync::{
+        Arc,
+        atomic::{AtomicUsize, Ordering},
+    },
 };
 
 use chrono::{Duration, TimeZone, Utc};
@@ -54,7 +57,12 @@ use crate::{
     common::{
         infra::config::{REALTIME_ALERT_TRIGGERS, STREAM_ALERTS},
         meta::{ingestion::IngestionRequest, stream::SchemaRecords},
-        utils::functions::get_vrl_compiler_config,
+        utils::{
+            functions::get_vrl_compiler_config,
+            js::{
+                JSRuntimeConfig, apply_js_fn as apply_js, compile_js_function as compile_js_func,
+            },
+        },
     },
     service::{
         alerts::alert::AlertExt,
@@ -67,6 +75,22 @@ pub mod grpc;
 pub mod ingestion_service;
 
 pub type TriggerAlertData = Vec<(Alert, Vec<Map<String, Value>>)>;
+
+/// Global atomic counter for round-robin distribution of requests across memory table buckets.
+/// This ensures even distribution of ingestion load across multiple buckets in axum.
+static REQUEST_COUNTER: AtomicUsize = AtomicUsize::new(0);
+
+/// Get the next thread_id using round-robin distribution.
+/// This replaces the thread-local approach from actix-web with a request-level distribution.
+///
+/// The counter will wrap around safely when it reaches usize::MAX:
+/// - On 64-bit systems: ~5.8 million years at 100k req/s
+/// - On 32-bit systems: wraps after ~12 hours at 100k req/s, but continues working correctly
+pub fn get_thread_id() -> usize {
+    let cfg = config::get_config();
+    // Use wrapping modulo to ensure even distribution across worker threads/buckets
+    REQUEST_COUNTER.fetch_add(1, Ordering::Relaxed) % cfg.limit.http_worker_num
+}
 
 pub fn compile_vrl_function(func: &str, org_id: &str) -> Result<VRLRuntimeConfig, std::io::Error> {
     if func.contains("get_env_var") {
@@ -94,6 +118,23 @@ pub fn compile_vrl_function(func: &str, org_id: &str) -> Result<VRLRuntimeConfig
             vrl::diagnostic::Formatter::new(func, e).to_string(),
         )),
     }
+}
+
+/// Compile a JS function and return configuration
+/// This wraps the common::utils::js::compile_js_function
+pub fn compile_js_function(func: &str, org_id: &str) -> Result<JSRuntimeConfig, std::io::Error> {
+    compile_js_func(func, org_id)
+}
+
+/// Apply a JS function to transform data
+/// This wraps the common::utils::js::apply_js_fn
+pub fn apply_js_fn(
+    js_config: &JSRuntimeConfig,
+    row: Value,
+    org_id: &str,
+    stream_name: &[String],
+) -> (Value, Option<String>) {
+    apply_js(js_config, row, org_id, stream_name)
 }
 
 pub fn apply_vrl_fn(
