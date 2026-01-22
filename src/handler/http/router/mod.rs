@@ -697,7 +697,11 @@ pub fn service_routes() -> Router {
 
         // MCP
         .route("/{org_id}/mcp", post(mcp::handle_mcp_post))
-        .route("/{org_id}/mcp/{*mcp_path}", get(mcp::handle_mcp_get));
+        .route("/{org_id}/mcp/{*mcp_path}", get(mcp::handle_mcp_get))
+
+        // sourcemaps
+        .route("/{org_id}/sourcemaps",get(sourcemaps::list).post(sourcemaps::upload_maps).delete(sourcemaps::delete))
+        .route("/{org_id}/sourcemaps/stacktrace",post(sourcemaps::translate_stacktrace));
 
     #[cfg(feature = "enterprise")]
     {
