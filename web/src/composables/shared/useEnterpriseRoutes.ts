@@ -40,6 +40,8 @@ const Invitations = () => import("@/views/Invitations.vue");
 
 import Users from "@/views/User.vue";
 
+const IncidentList = () => import("@/components/alerts/IncidentList.vue");
+
 const useEnterpriseRoutes = () => {
   const routes: any = [
     {
@@ -69,6 +71,17 @@ const useEnterpriseRoutes = () => {
           },
           component: ServiceAccountsList,
           beforeEnter(to: any, from: any, next: any) {
+            // Check if service accounts are enabled
+            // Note: Using window.store here because useStore() doesn't work in route guards
+            const store = (window as any).store;
+            const serviceAccountEnabled = store?.state?.zoConfig?.service_account_enabled ?? true;
+
+            if (!serviceAccountEnabled) {
+              // Redirect to users page if service accounts are disabled
+              next({ name: "users", query: to.query });
+              return;
+            }
+
             routeGuard(to, from, next);
           },
         },
@@ -90,6 +103,31 @@ const useEnterpriseRoutes = () => {
   //the above are the routes that we support for oss including both enterprise and cloud
 
   if (config.isCloud == "true" || config.isEnterprise == "true") {
+    routes.push(
+      {
+        path: "incidents",
+        name: "incidentList",
+        component: IncidentList,
+        meta: {
+          title: "Incidents",
+        },
+        beforeEnter(to: any, from: any, next: any) {
+          routeGuard(to, from, next);
+        },
+      },
+      {
+        path: "incidents/:id",
+        name: "incidentDetail",
+        component: () => import("@/components/alerts/IncidentDetailDrawer.vue"),
+        meta: {
+          title: "Incident Detail",
+        },
+        beforeEnter(to: any, from: any, next: any) {
+          routeGuard(to, from, next);
+        },
+      },
+    );
+
     routes.push({
       path: "actions",
       name: "actionScripts",
